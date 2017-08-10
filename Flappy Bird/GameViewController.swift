@@ -8,48 +8,34 @@
 
 import UIKit
 import SpriteKit
-import GameplayKit
 
-class GameViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
-            if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
+class GameViewController:UIViewController {
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        if let skView = self.view as? SKView {
+            if skView.scene == nil {
+                //创建场景
+                let scale = skView.bounds.size.height / skView.bounds.size.width  //长宽比
+                let bgView = GameScene.init(size: CGSize.init(width: 329, height: 320 * scale)) //场景
+//                skView.showsFPS = true //显示帧率
+//                skView.showsNodeCount = true //显示节点数量
+//                skView.showsPhysics = true //显示物理模型(边框)
+                skView.ignoresSiblingOrder = true //忽略添加顺序
                 
-                // Present the scene
-                view.presentScene(scene)
+                bgView.scaleMode = .aspectFill //正比例缩放
+                
+                skView.presentScene(bgView) //加载视图
+                
             }
-            
-            view.ignoresSiblingOrder = true
-            
-            view.showsFPS = true
-            view.showsNodeCount = true
         }
+        
+        
     }
-
-    override var shouldAutorotate: Bool {
+    /**
+     *  顶部状态栏隐藏
+     */
+    override var prefersStatusBarHidden : Bool {
         return true
     }
-
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
-        } else {
-            return .all
-        }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
-    }
-
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
+    
 }
